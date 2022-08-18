@@ -23,7 +23,7 @@ data:
             NFS_Protocols = 3;
     
             # fixed ports
-            NFS_Port = 20049;
+            NFS_Port = 2049;
             MNT_Port = 20048;
             NLM_Port = 32803;
             Rquota_Port = 875;

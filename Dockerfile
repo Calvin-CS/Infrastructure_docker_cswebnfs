@@ -132,7 +132,7 @@ RUN rm -f /etc/ganesha/ganesha.conf
 RUN mkdir -p /var/run/ganesha /var/run/dbus
 
 # Expose the service
-EXPOSE 20049/tcp 111/tcp 20048/tcp 32803/tcp 875/tcp
+EXPOSE 2049/tcp 111/tcp 20048/tcp 32803/tcp 875/tcp
 
 # Locale and environment setup
 RUN locale-gen en_US.UTF-8
