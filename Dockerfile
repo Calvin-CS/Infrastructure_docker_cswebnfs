@@ -126,12 +126,12 @@ RUN apt update -y && \
     nfs-ganesha-vfs \
     nfs-ganesha-rados-urls && \
     rm -rf /var/lib/apt/lists/*
-COPY --chmod=0644 inc/ganesha.conf /etc/ganesha/ganesha.conf
 COPY --chmod=0644 inc/idmapd.conf /etc/idmapd.conf
+RUN rm -f /etc/ganesha/ganesha.conf
 RUN mkdir -p /var/run/ganesha /var/run/dbus
 
 # Expose the service
-EXPOSE 2049/tcp 111/tcp 111/udp 20048/tcp 32803/tcp 875/tcp
+EXPOSE 20049/tcp 111/tcp 20048/tcp 32803/tcp 875/tcp
 
 # Locale and environment setup
 RUN locale-gen en_US.UTF-8
