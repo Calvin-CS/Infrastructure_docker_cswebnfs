@@ -1,0 +1,4 @@
+apiVersion: v2
+name: cswebnfs
+description: A Helm chart for Kubernetes deployment of csweb
+version: 0.1.0

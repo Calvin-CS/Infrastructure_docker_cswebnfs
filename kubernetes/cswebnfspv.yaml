@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-cswebnfs
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: managed-csi
+  csi:
+    driver: disk.csi.azure.com
+    readOnly: false
+    volumeHandle: /subscriptions/74b77369-d8f5-47cd-bd00-63e73e3109dc/resourceGroups/CS_Infrastructure_AKS/providers/Microsoft.Compute/disks/cswebnfs
+    volumeAttributes:
+      fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-cswebnfs-csweb
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: managed-csi
+  resources:
+    requests:
+      storage: 100Gi
+  volumeName: pv-cswebnfs
+  storageClassName: managed-csi

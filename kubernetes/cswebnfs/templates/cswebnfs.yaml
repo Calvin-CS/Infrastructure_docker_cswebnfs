@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cswebnfs-{{ default "staging" .Release.Namespace }}
+  namespace: {{ default "staging" .Release.Namespace }}
+  labels:
+    app: cswebnfs-{{ default "staging" .Release.Namespace }}
+  annotations: 
+    "builddate": "20220818-01"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cswebnfs-{{ default "staging" .Release.Namespace }}
+  template:
+    metadata:
+      labels:
+        app: cswebnfs-{{ default "staging" .Release.Namespace }}
+        {{ if ne .Release.Namespace "production" }}name: cswebnfs-{{ .Release.Namespace }}{{- else }}hostname: cswebnfs{{- end }}
+    spec:
+      {{ if ne .Release.Namespace "production" }}hostname: cswebnfs-{{ .Release.Namespace }}{{- else }}hostname: cswebnfs{{- end }} 
+      dnsPolicy: Default
+      dnsConfig:
+        searches:
+          - cs.calvin.edu
+      containers:
+      - name: cswebnfs-{{ default "staging" .Release.Namespace }}
+        image: {{ .Values.image.registry }}/{{ .Values.image.name }}:{{ default "latest" .Values.image.tag }}
+        ports:
+        - containerPort: 2049
+          protocol: TCP
+        - containerPort: 111
+          protocol: TCP
+        - containerPort: 111
+          protocol: UDP
+        - containerPort: 20048
+          protocol: TCP
+        - containerPort: 32803
+          protocol: TCP
+        - containerPort: 875
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /export/csweb
+          name: mount0
+      volumes:
+      - name: mount0
+        persistentVolumeClaim:
+          claimName: pvc-cswebnfs-csweb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cswebnfs-{{ default "staging" .Release.Namespace }}
+  namespace: {{ default "staging" .Release.Namespace }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: cswebnfs{{- if ne .Release.Namespace "production" }}-{{ default "staging" .Release.Namespace }}{{- end }}.{{ .Values.dns.name }}
+    service.beta.kubernetes.io/azure-dns-label-name: calvincs-cswebnfs{{- if ne .Release.Namespace "production" }}-{{ default "staging" .Release.Namespace }}{{- end }}
+spec:
+  type: NodePort
+  ports:
+  - port: 2049
+    targetPort: 2049
+    name: nfs
+    protocol: TCP
+  - port: 111
+    targetPort: 111
+    name: nfsportmap
+    protocol: TCP
+  - port: 111
+    targetPort: 111
+    name: nfsportmapudp
+    protocol: UDP
+  - port: 20048
+    targetPort: 20048
+    name: nfsmnt
+    protocol: TCP
+  - port: 32803
+    targetPort: 32803
+    name: nfsnlm
+    protocol: TCP
+  - port: 875
+    targetPort: 875
+    name: nfsrquota
+    protocol: TCP
+  selector:
+    app: cswebnfs-{{ default "staging" .Release.Namespace }}
