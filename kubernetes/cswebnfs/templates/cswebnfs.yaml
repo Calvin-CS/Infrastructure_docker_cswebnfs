@@ -6,7 +6,7 @@ metadata:
   labels:
     app: cswebnfs-{{ default "staging" .Release.Namespace }}
   annotations: 
-    "builddate": "20220818-02"
+    "builddate": "20220818-03"
 spec:
   replicas: 1
   selector:
@@ -27,7 +27,7 @@ spec:
       - name: cswebnfs-{{ default "staging" .Release.Namespace }}
         image: {{ .Values.image.registry }}/{{ .Values.image.name }}:{{ default "latest" .Values.image.tag }}
         ports:
-        - containerPort: 20049
+        - containerPort: 2049
           protocol: TCP
         - containerPort: 111
           protocol: TCP
@@ -68,8 +68,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 20049
-    targetPort: 20049
+  - port: 2049
+    targetPort: 2049
     name: nfs
     protocol: TCP
   - port: 111

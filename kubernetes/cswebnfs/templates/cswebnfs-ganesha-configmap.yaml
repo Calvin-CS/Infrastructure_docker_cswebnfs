@@ -85,19 +85,14 @@ data:
             Path = "/export/csweb";
             Pseudo = "/export/csweb";
             Squash = No_Root_Squash;
+            Manage_Gids = True;
     
             FSAL {
                     Name = "VFS";
             }
 
             CLIENT {
-                    # kubernetes connections
-                    Clients = 10.230.224.0/22;
-            }
-
-            CLIENT {
-                    # Azure VNETs and localhost
-                    Clients = 10.230.0.0/16, 10.231.0.0/16, 10.232.0.0/16, 127.0.0.1;
+                    Clients = *;
             }
     }
 
