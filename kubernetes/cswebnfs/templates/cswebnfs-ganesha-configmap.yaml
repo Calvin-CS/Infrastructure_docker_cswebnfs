@@ -29,7 +29,7 @@ data:
             Rquota_Port = 875;
     
             # disable UDP
-            Enable_UDP = False;
+            Enable_UDP = false;
     }
     
     NFS_KRB5
@@ -65,6 +65,7 @@ data:
             Components {
                     FSAL = INFO;
                     NFS3 = EVENT;
+                    EXPORT = Full_Debug;
             }
     
             ## Where to log
@@ -85,7 +86,12 @@ data:
             Path = "/export/csweb";
             Pseudo = "/export/csweb";
             Squash = No_Root_Squash;
-            Manage_Gids = True;
+            Manage_Gids = False;
+            Transports = "TCP";
+            Access_Type = RW;
+            SecType = sys;
+            Protocols = "3";
+            Disable_ACL = true;
     
             FSAL {
                     Name = "VFS";

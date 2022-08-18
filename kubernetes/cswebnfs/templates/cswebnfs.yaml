@@ -26,19 +26,14 @@ spec:
       containers:
       - name: cswebnfs-{{ default "staging" .Release.Namespace }}
         image: {{ .Values.image.registry }}/{{ .Values.image.name }}:{{ default "latest" .Values.image.tag }}
+        securityContext:
+          privileged: true
         ports:
         - containerPort: 2049
-          protocol: TCP
         - containerPort: 111
-          protocol: TCP
-        - containerPort: 111
-          protocol: UDP
         - containerPort: 20048
-          protocol: TCP
         - containerPort: 32803
-          protocol: TCP
         - containerPort: 875
-          protocol: TCP
         volumeMounts:
         - mountPath: /export/csweb
           name: mount0
