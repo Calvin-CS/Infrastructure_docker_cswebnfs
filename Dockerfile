@@ -100,6 +100,7 @@ RUN apt update -y && \
     iproute2 \
     bind9-dnsutils \
     netcat-openbsd \
+    net-tools \
     vim-tiny \
     git \
     acl \
