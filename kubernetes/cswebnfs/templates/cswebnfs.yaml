@@ -6,7 +6,7 @@ metadata:
   labels:
     app: cswebnfs-{{ default "staging" .Release.Namespace }}
   annotations: 
-    "builddate": "20220818-03"
+    "builddate": "20220826-01"
 spec:
   replicas: 1
   selector:
@@ -28,33 +28,68 @@ spec:
         image: {{ .Values.image.registry }}/{{ .Values.image.name }}:{{ default "latest" .Values.image.tag }}
         securityContext:
           privileged: true
+          capabilities:
+            add:
+            - SYS_MODULE
+            - SYS_ADMIN
         ports:
         - containerPort: 2049
+          protocol: TCP
+        - containerPort: 2049
+          protocol: UDP
         - containerPort: 111
-        - containerPort: 20048
-        - containerPort: 32803
-        - containerPort: 875
+          protocol: TCP
+        - containerPort: 111
+          protocol: UDP
+        - containerPort: 32765
+          protocol: TCP
+        - containerPort: 32765
+          protocol: UDP
+        - containerPort: 32767
+          protocol: TCP
+        - containerPort: 32767
+          protocol: UDP
         volumeMounts:
+        - mountPath: /export
+          name: mountcswebbase
         - mountPath: /export/csweb
-          name: mount0
-        - mountPath: /etc/ganesha
-          name: ganesha-configmap
-          readOnly: true
+          name: mountcsweb
+        - mountPath: /etc/exports
+          name: configmap-exports
+          subPath: exports
+        - mountPath: /etc/idmapd.conf
+          name: configmap-idmap
+          subPath: idmapd.conf
+        - mountPath: /lib/modules
+          name: hostpath-lib-modules
       volumes:
-      - name: mount0
+      - name: mountcsweb
         persistentVolumeClaim:
           claimName: pvc-cswebnfs-csweb
-      - name: ganesha-configmap
+      - name: mountcswebbase
+        persistentVolumeClaim:
+          claimName: pvc-cswebnfs-csweb-base
+      - name: configmap-exports
         configMap:
-          name: cswebnfs-ganesha-config
+          name: cswebnfs-config
           items:
-          - key: config
-            path: ganesha.conf
+          - key: exports
+            path: exports
+      - name: configmap-idmap
+        configMap:
+          name: cswebnfs-config
+          items:
+          - key: idmapd
+            path: idmapd.confa
+      - name: hostpath-lib-modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cswebnfs-{{ default "staging" .Release.Namespace }}
+  name: cswebnfs-lb-{{ default "staging" .Release.Namespace }}
   namespace: {{ default "staging" .Release.Namespace }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: cswebnfs{{- if ne .Release.Namespace "production" }}-{{ default "staging" .Release.Namespace }}{{- end }}.{{ .Values.dns.name }}
@@ -71,17 +106,52 @@ spec:
     targetPort: 111
     name: nfsportmap
     protocol: TCP
-  - port: 20048
-    targetPort: 20048
-    name: nfsmnt
-    protocol: TCP
-  - port: 32803
-    targetPort: 32803
-    name: nfsnlm
-    protocol: TCP
-  - port: 875
-    targetPort: 875
-    name: nfsrquota
-    protocol: TCP
   selector:
     app: cswebnfs-{{ default "staging" .Release.Namespace }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cswebnfs-ip-{{ default "staging" .Release.Namespace }}
+  namespace: {{ default "staging" .Release.Namespace }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: cswebnfs-int{{- if ne .Release.Namespace "production" }}-{{ default "staging" .Release.Namespace }}{{- end }}.{{ .Values.dns.name }}
+    service.beta.kubernetes.io/azure-dns-label-name: calvincs-cswebnfs-int{{- if ne .Release.Namespace "production" }}-{{ default "staging" .Release.Namespace }}{{- end }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: 2049
+    targetPort: 2049
+    name: nfs
+    protocol: TCP
+  - port: 2049
+    targetPort: 2049
+    name: nfsudp
+    protocol: UDP
+  - port: 111
+    targetPort: 111
+    name: nfsportmap
+    protocol: TCP
+  - port: 111
+    targetPort: 111
+    name: nfsportmapudp
+    protocol: UDP
+  - port: 32765
+    targetPort: 32765
+    name: nfsmnt
+    protocol: TCP
+  - port: 32765
+    targetPort: 32765
+    name: nfsmntudp
+    protocol: UDP
+  - port: 32767
+    targetPort: 32767
+    name: nfsnlm
+    protocol: TCP
+  - port: 32767
+    targetPort: 32767
+    name: nfsnlmudp
+    protocol: UDP
+  selector:
+    app: cswebnfs-{{ default "staging" .Release.Namespace }}
+

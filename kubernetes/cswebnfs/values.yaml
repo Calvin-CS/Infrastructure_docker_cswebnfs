@@ -1,6 +1,6 @@
 image:
-  registry: calvincs.azurecr.io
-  name: cswebnfs
+  registry: registry-1.docker.io
+  name: erichough/nfs-server
   tag: latest
 dns:
   name: k8s.cs.calvin.edu

@@ -1,0 +1,28 @@
+kind: ConfigMap
+apiVersion: v1
+metadata: 
+  name: cswebnfs-config
+data:
+  exports: |
+    ####################################################
+    ## cswebnfs NFS server configuration
+    ## Configmap
+    ###################################################
+
+    /export 10.230.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 10.0.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 172.17.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 127.0.0.1(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0)
+    /export/csweb 10.230.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 10.0.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 172.17.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 127.0.0.1(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure)
+  idmapd: |
+    ####################################################
+    # cswebnfs idmapd
+    # Configmap
+    ####################################################
+
+    [General]
+    Verbosity = 0
+    Pipefs-Directory = /run/rpc_pipefs
+    Domain = ad.calvin.edu
+    
+    [Mapping]
+    
+    Nobody-User = nobody
+    Nobody-Group = nogroup
