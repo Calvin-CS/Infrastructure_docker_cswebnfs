@@ -2,7 +2,7 @@
 ARG BUILD_FROM=alpine:latest
 FROM $BUILD_FROM
 LABEL maintainer="Chris Wieringa <cwieri39@calvin.edu>"
-ARG BUILDDATE=20220829-01
+ARG BUILDDATE=20220829-02
 
 RUN apk --update --no-cache add bash nfs-utils tzdata && \
                                                   \

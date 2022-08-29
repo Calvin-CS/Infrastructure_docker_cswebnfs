@@ -9,8 +9,8 @@ data:
     ## Configmap
     ###################################################
 
-    /export 10.230.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 10.0.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 172.17.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 127.0.0.1(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0)
-    /export/csweb 10.230.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 10.0.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 172.17.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 127.0.0.1(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure)
+    /export 10.230.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 10.0.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 172.17.0.0/16(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) 127.0.0.1(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0) *(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0)
+    /export/csweb 10.230.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 10.0.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 172.17.0.0/16(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) 127.0.0.1(rw,sync,sec=sys,no_subtree_check,no_root_squash,nohide,insecure) *(rw,sync,sec=sys,no_subtree_check,crossmnt,fsid=0)
   idmapd: |
     ####################################################
     # cswebnfs idmapd
