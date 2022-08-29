@@ -1,17 +1,33 @@
 # Based on https://github.com/ehough/docker-nfs-server/blob/develop/Dockerfile
-ARG BUILD_FROM=alpine:latest
-FROM $BUILD_FROM
+FROM calvincs.azurecr.io/base-sssd:latest
 LABEL maintainer="Chris Wieringa <cwieri39@calvin.edu>"
-ARG BUILDDATE=20220829-02
 
-RUN apk --update --no-cache add bash nfs-utils tzdata && \
-                                                  \
+# Set versions and platforms
+ARG S6_OVERLAY_VERSION=3.1.1.2
+ARG BUILDDATE=20220829-03
+
+# Do all run commands with bash
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT ["/init"]
+
+# copy new s6-overlay items for NFS/logging
+COPY s6-overlay/ /etc/s6-overlay
+
+# Install syslogd-overlay
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/syslogd-overlay-noarch.tar.xz /tmp/
+RUN tar -C / -Jxpf /tmp/syslogd-overlay-noarch.tar.xz && \
+    rm -f /tmp/syslogd-overlay-noarch.tar.xz
+
+# Access control
+RUN echo "ldap_access_filter = memberOf=CN=CS-admins,OU=Groups,OU=CalvinCS,DC=ad,DC=calvin,DC=edu" >> /etc/sssd/sssd.conf
+
+# Setup of NFS
+RUN apt update -y && apt install -y nfs-kernel-server acl && \
     # remove the default config files
-    rm -v /etc/idmapd.conf /etc/exports
+    rm -v /etc/idmapd.conf /etc/exports && \
 
-# http://wiki.linux-nfs.org/wiki/index.php/Nfsv4_configuration
-RUN mkdir -p /var/lib/nfs/rpc_pipefs && \
-    mkdir -p /var/lib/nfs/v4recovery && \
+    # http://wiki.linux-nfs.org/wiki/index.php/Nfsv4_configuration
+    mkdir -p /var/lib/nfs/rpc_pipefs /var/lib/nfs/v4recovery && \
     echo "rpc_pipefs  /var/lib/nfs/rpc_pipefs  rpc_pipefs  defaults  0  0" >> /etc/fstab && \
     echo "nfsd        /proc/fs/nfsd            nfsd        defaults  0  0" >> /etc/fstab
 
@@ -21,8 +37,7 @@ HEALTHCHECK --interval=10s --timeout=5s --retries=5 \
 	CMD exportfs || exit 1
 
 # setup entrypoint
-COPY --chmod=0755 ./entrypoint.sh /usr/local/bin
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+COPY --chmod=0755 inc/entrypoint.sh /usr/local/bin
 
 # environment variables
 ENV NFS_SERVER_THREAD_COUNT=8

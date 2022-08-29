@@ -605,7 +605,7 @@ boot_main_mountd() {
   local version_flags
   read -r -a version_flags <<< "$(boot_helper_get_version_flags)"
   local -r port="${state[$STATE_MOUNTD_PORT]}"
-  local args=('--port' "$port" "${version_flags[@]}")
+  local args=('-g' '--port' "$port" "${version_flags[@]}")
   if is_logging_debug; then
     args+=('--debug' 'all')
   fi
