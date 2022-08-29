@@ -540,6 +540,7 @@ boot_helper_get_version_flags() {
     flags+=('--no-nfs-version' '4')
   fi
 
+  log "NFS versions ${flags[@]}"
   echo "${flags[@]}"
 }
 
