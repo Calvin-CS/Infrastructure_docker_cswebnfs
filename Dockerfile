@@ -26,6 +26,7 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # environment variables
 ENV NFS_SERVER_THREAD_COUNT=8
+ENV NFS_VERSION=4.2
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
