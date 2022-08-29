@@ -1,6 +1,6 @@
 image:
   registry: calvincs.azurecr.io
-  name: cswebnfs/latest
+  name: cswebnfs
   tag: latest
 dns:
   name: k8s.cs.calvin.edu
