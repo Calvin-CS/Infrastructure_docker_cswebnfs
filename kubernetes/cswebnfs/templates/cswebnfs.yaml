@@ -62,6 +62,7 @@ spec:
           subPath: idmapd.conf
         - mountPath: /lib/modules
           name: hostpath-lib-modules
+          readOnly: true
       volumes:
       - name: mountcsweb
         persistentVolumeClaim:
