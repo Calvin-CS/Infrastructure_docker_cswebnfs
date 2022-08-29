@@ -540,7 +540,6 @@ boot_helper_get_version_flags() {
     flags+=('--no-nfs-version' '4')
   fi
 
-  log "NFS versions ${flags[@]}"
   echo "${flags[@]}"
 }
 
@@ -703,7 +702,8 @@ boot_main_nfsd() {
   read -r -a version_flags <<< "$(boot_helper_get_version_flags)"
   local -r threads="${state[$STATE_NFSD_THREAD_COUNT]}"
   local -r port="${state[$STATE_NFSD_PORT]}"
-  local args=('--tcp' '--udp' '-G' '10' '--port' "$port" "${version_flags[@]}" "$threads")
+  #local args=('--tcp' '--udp' '-G' '10' '--port' "$port" "${version_flags[@]}" "$threads")
+  local args=('--tcp' '--udp' '-G' '10' '--port' "$port" '-N' '2' '-V' '4.2' "$threads")
 
   if is_logging_debug; then
     args+=('--debug')
