@@ -1,7 +1,8 @@
-# https://github.com/ehough/docker-nfs-server/blob/develop/Dockerfile
+# Based on https://github.com/ehough/docker-nfs-server/blob/develop/Dockerfile
 ARG BUILD_FROM=alpine:latest
-
 FROM $BUILD_FROM
+LABEL maintainer="Chris Wieringa <cwieri39@calvin.edu>"
+ARG BUILDDATE=20220829-01
 
 RUN apk --update --no-cache add bash nfs-utils tzdata && \
                                                   \
