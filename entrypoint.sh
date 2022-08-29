@@ -530,7 +530,8 @@ boot_helper_mount() {
 boot_helper_get_version_flags() {
 
   local -r requested_version="${state[$STATE_NFS_VERSION]}"
-  local flags=('--nfs-version' "$requested_version" '--no-nfs-version' '2')
+  #local flags=('--nfs-version' "$requested_version" '--no-nfs-version' '2')
+  local flags=('--nfs-version' "$requested_version")
 
   if ! is_nfs3_enabled; then
     flags+=('--no-nfs-version' '3')
@@ -702,8 +703,7 @@ boot_main_nfsd() {
   read -r -a version_flags <<< "$(boot_helper_get_version_flags)"
   local -r threads="${state[$STATE_NFSD_THREAD_COUNT]}"
   local -r port="${state[$STATE_NFSD_PORT]}"
-  #local args=('--tcp' '--udp' '-G' '10' '--port' "$port" "${version_flags[@]}" "$threads")
-  local args=('--tcp' '--udp' '-G' '10' '--port' "$port" '-N' '2' '-V' '4.2' "$threads")
+  local args=('--tcp' '--udp' '-G' '10' '--port' "$port" "${version_flags[@]}" "$threads")
 
   if is_logging_debug; then
     args+=('--debug')
