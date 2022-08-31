@@ -50,8 +50,6 @@ spec:
         - containerPort: 32767
           protocol: UDP
         volumeMounts:
-        - mountPath: /export
-          name: mountcswebbase
         - mountPath: /export/csweb
           name: mountcsweb
         - mountPath: /etc/exports
@@ -67,9 +65,6 @@ spec:
       - name: mountcsweb
         persistentVolumeClaim:
           claimName: pvc-cswebnfs-csweb
-      - name: mountcswebbase
-        persistentVolumeClaim:
-          claimName: pvc-cswebnfs-csweb-base
       - name: configmap-exports
         configMap:
           name: cswebnfs-config

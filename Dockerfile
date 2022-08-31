@@ -22,10 +22,11 @@ RUN tar -C / -Jxpf /tmp/syslogd-overlay-noarch.tar.xz && \
 RUN echo "ldap_access_filter = memberOf=CN=CS-admins,OU=Groups,OU=CalvinCS,DC=ad,DC=calvin,DC=edu" >> /etc/sssd/sssd.conf
 
 # Setup of NFS
-RUN apt update -y && apt install -y nfs-kernel-server acl libcap2-bin && \
+RUN apt update -y && apt install -y nfs-kernel-server acl libcap2-bin rsync nfs-common && \
     # remove the default config files
     rm -v /etc/idmapd.conf /etc/exports && \
-
+    # add export directory for csweb
+    mkdir -p /export/csweb && \
     # http://wiki.linux-nfs.org/wiki/index.php/Nfsv4_configuration
     mkdir -p /var/lib/nfs/rpc_pipefs /var/lib/nfs/v4recovery && \
     echo "rpc_pipefs  /var/lib/nfs/rpc_pipefs  rpc_pipefs  defaults  0  0" >> /etc/fstab && \
