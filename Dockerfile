@@ -4,7 +4,7 @@ LABEL maintainer="Chris Wieringa <cwieri39@calvin.edu>"
 
 # Set versions and platforms
 ARG S6_OVERLAY_VERSION=3.1.1.2
-ARG BUILDDATE=20220829-03
+ARG BUILDDATE=20220901-02
 
 # Do all run commands with bash
 SHELL ["/bin/bash", "-c"]
@@ -22,7 +22,7 @@ RUN tar -C / -Jxpf /tmp/syslogd-overlay-noarch.tar.xz && \
 RUN echo "ldap_access_filter = memberOf=CN=CS-admins,OU=Groups,OU=CalvinCS,DC=ad,DC=calvin,DC=edu" >> /etc/sssd/sssd.conf
 
 # Setup of NFS
-RUN apt update -y && apt install -y nfs-kernel-server acl libcap2-bin rsync nfs-common && \
+RUN apt update -y && apt install -y nfs-kernel-server acl libcap2-bin rsync nfs-common kmod && \
     # remove the default config files
     rm -v /etc/idmapd.conf /etc/exports && \
     # add export directory for csweb
