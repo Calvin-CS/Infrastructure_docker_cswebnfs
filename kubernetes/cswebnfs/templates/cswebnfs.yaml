@@ -5,8 +5,6 @@ metadata:
   namespace: {{ default "staging" .Release.Namespace }}
   labels:
     app: cswebnfs-{{ default "staging" .Release.Namespace }}
-  annotations: 
-    "builddate": "20220901-02"
 spec:
   replicas: 1
   selector:
@@ -14,6 +12,8 @@ spec:
       app: cswebnfs-{{ default "staging" .Release.Namespace }}
   template:
     metadata:
+      annotations:
+        releaseTime: {{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC"| quote }}
       labels:
         app: cswebnfs-{{ default "staging" .Release.Namespace }}
         {{ if ne .Release.Namespace "production" }}name: cswebnfs-{{ .Release.Namespace }}{{- else }}hostname: cswebnfs{{- end }}
