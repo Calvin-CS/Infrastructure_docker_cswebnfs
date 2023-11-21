@@ -3,8 +3,8 @@ FROM calvincs.azurecr.io/base-sssd:latest
 LABEL maintainer="Chris Wieringa <cwieri39@calvin.edu>"
 
 # Set versions and platforms
-ARG S6_OVERLAY_VERSION=3.1.1.2
-ARG BUILDDATE=20230201-1
+ARG S6_OVERLAY_VERSION=3.1.6.2
+ARG BUILDDATE=20231121-1
 
 # Do all run commands with bash
 SHELL ["/bin/bash", "-c"]
